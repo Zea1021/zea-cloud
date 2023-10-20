@@ -1,0 +1,7 @@
+mysql：      3306
+nacos:    8848
+xxljob:   10210
+minio:    10211 控制台, 10212 服务
+rocketmq：10213 服务, 10214 dashboard控制台
+seata:    10215, 11215 服务
+redis:    10216

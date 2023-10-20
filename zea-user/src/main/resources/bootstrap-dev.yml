@@ -1,0 +1,40 @@
+server:
+  port: 9710
+  servlet:
+    context-path: /zea-cloud/zea-user/
+
+spring:
+  application:
+    # 项目名
+    name: user-service
+  config:
+    name: user-service
+  cloud:
+    nacos:
+      # nacos的ip地址和端口
+      server-addr: 127.0.0.1:8848
+      # nacos登录用户名
+      username: nacos
+      # nacos登录密码
+      password: nacos
+      # 配置中心（如果没有使用可以不配）
+      config:
+        # 命名空间
+        # namespace: dev
+        namespace: ${spring.profiles.active}
+        # 这个就表示 在我们 nacos 命名空间id为 dev中 有一个data-id 为 user-service-service-dev.yml 的配置文件 读取这个里面的配置
+        file-extension: yml
+        config-retry-time: 300000
+        # 共享配置, 可以把公共配置放在同个命名空间下，然后创建一个 common.yml 文件 ，里面可以放共用的配置
+        # shared-configs: common.yml
+        group: dev
+      # 发布到注册中心（如果没有使用可以不配）
+      discovery:
+        # 命名空间
+        namespace: ${spring.profiles.active}
+        # 分组
+        group: zea
+      #  serverAddr，页面访问时的 url 即 {ip}:{port}/{contextPath} ，其中 contextPath 默认是 nacos
+      #  clusterName (nacos config 集群名称)，你的serverAddr实际上是 {ip}:{port}/{contextPath}/{clusterName} 。
+      #  dataId 规则：${prefix}-${spring.profile.active}.${file-extension} 。prefix 默认是spring.application.name属性。
+      #  这里我们定义一个 spring.application.name 即 user-service。spring.profile.active 如果不设置的话 nacos 会自动把前面的-符号也去掉。

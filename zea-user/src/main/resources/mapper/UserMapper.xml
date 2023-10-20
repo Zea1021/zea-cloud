@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zea.cloud.user.mapper.UserMapper">
+
+    <select id="selectAllUser" resultType="com.zea.cloud.user.bean.entiry.User">
+        select
+            id,
+            username,
+            nickname,
+            phone,
+            email,
+            address,
+            department,
+            create_time,
+            update_time
+        from user
+    </select>
+
+    <select id="selectUserList" resultType="com.zea.cloud.user.bean.entiry.User">
+        select
+            id,
+            username,
+            nickname,
+            phone,
+            email,
+            address,
+            department,
+            create_time,
+            update_time
+        from user
+        <where>
+            <if test="condition.username != null and condition.username != ''">
+                username like concat('%', #{condition.userName}, '%')
+            </if>
+            <if test="condition.nickName != null and condition.nickName != ''">
+                and nickName like concat('%', #{condition.nickName}, '%')
+            </if>
+            <if test="condition.phone != null and condition.phone != ''">
+                and phone like concat('%',  #{condition.phone}, '%')
+            </if>
+            <if test="condition.department != null and condition.department != ''">
+                and department like concat('%',  #{condition.department}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserInfoById" resultType="com.zea.cloud.user.bean.entiry.User">
+        select
+            id,
+            username,
+            nickname,
+            phone,
+            email,
+            address,
+            department,
+            create_time,
+            update_time
+        from user
+        where id = #{id}
+    </select>
+
+</mapper>

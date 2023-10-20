@@ -1,0 +1,92 @@
+server:
+  port: 19700
+
+spring:
+  main:
+    web-application-type: reactive
+  # 配置文件命名前缀 gateway-server-dev.yml
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      # nacos的ip地址和端口
+      server-addr: 127.0.0.1:8848
+      # nacos登录用户名
+      username: nacos
+      # nacos登录密码
+      password: nacos
+      # 配置中心
+      config:
+        # 命名空间id(此处不用public,因public初始化的空间, id为空)
+        # namespace: dev
+        namespace: ${spring.profiles.active}
+        # 这个就表示 在我们nacos命名空间id为 dev中 有一个data-id 为 demo-service.yml 的配置文件 读取这个里面的配置
+        file-extension: yml
+        config-retry-time: 300000
+        # 共享配置, 可以把公共配置放在同个命名空间下，然后创建一个 common.yml 文件 ，里面可以放共用的配置
+        shared-configs: common.yml
+      # 发布到注册中心 （如果没有使用可以不配）
+      discovery:
+        # 命名空间id(此处不用public,因public初始化的空间, id为空)
+        namespace: ${spring.profiles.active}
+        # 分组
+        group: zea
+
+    #  springcloud gateway 中 lb 代表了负载均衡(load balance)，
+    #  有这个标志后，gateway就知道需要进行负载均衡，转发到lb://后面跟的服务名对应的某台服务器上，
+    #  至于如何实现负载均衡，是通过负载均衡组件来的，比如 ribbon 或者 springcloud-loadbalancer 组件拿到服务列表，从而进行服务的转发。
+    #  所以 lb://，其实跟服务注册中心没有关系，就算不是nacos，用其它的，比如eureka，也是这么写 lb://。
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 开启从注册中心动态创建路由的功能，利用微服务名进行路由
+      routes:
+        # uri服务地址配置方式：
+        # 1、uri: http://localhost:9721/
+        # 2、websocket方式  uri: ws: http://localhost:9721/
+        # 3、注册中心配置方式(注意：不要带下划线_，会无法识别) uri: lb://admin-service
+        - id: admin_rout
+          uri: lb://admin-service
+          predicates:
+            - Path=/zea-cloud/zea-biz-admin/**
+        - id: basic_rout
+          uri: lb://basic-service
+          predicates:
+            - Path=/zea-cloud/zea-basic/**
+        - id: user_rout
+          uri: lb://user-service
+          predicates:
+            - Path=/zea-cloud/zea-user/**
+          filters:
+            # 给所有进入 userservice 的请求添加一个请求头：zea=awesome!
+            - AddRequestHeader=zea, awesome!
+            # 给所有进入 userservice 的响应添加一个请求头：zea=awesome!
+            - AddResponseHeader=zea, awesome!
+          # filters:
+            # - AddRequestHeader=name,zs          #请求头添加name:zs
+            # - AddRequestParameter=color,blue    #请求参数添加color:blue
+            # - AddResponseHeader=phone,973345344 #响应头添加phone:973345344
+            # - PrefixPath=/mypath                #添加路径前缀/mypath
+            # - StripPrefix=n                     #删除路径前缀n个
+      globalcors: # 全局的跨域处理
+        add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: # 允许哪些网站的跨域请求
+              - "*"
+            allowedMethods: # 允许的跨域ajax的请求方式
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTION"
+            allowedHeaders: "*" # 允许在请求中携带的头信息
+            allowedOriginPatterns: true # 是否允许携带cookie 建议使用 allowedOriginPatterns 进行配置；
+            # 使用 allowCredentials 时，如果 allowedOrigins 配置为 * 会报错，配置为具体域名则不会报错
+            # 报错：When allowCredentials is true, allowedOrigins cannot contain the special value "*"
+            # since that cannot be set on the "Access-Control-Allow-Origin" response header.
+            # To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead.
+            maxAge: 360000 # 这次跨域检测的有效期
+
+      default-filters: # 默认过滤项
+        - AddResponseHeader=project, zea-cloud
