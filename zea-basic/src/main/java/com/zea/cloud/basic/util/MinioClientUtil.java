@@ -20,7 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class MinioClientUtil {
 
-    @Autowired
+    @Resource
     private MinioClient minioClient;
 
     /**
@@ -29,7 +29,7 @@ public class MinioClientUtil {
      * @param bucketName 桶名
      * @return 是否存在
      */
-    public boolean bucketExist(String bucketName) throws Exception{
+    public boolean bucketExists(String bucketName) throws Exception{
         try {
             return minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class MinioClientUtil {
      */
     public void createBucket(String bucketName) throws Exception {
         try {
-            if (!bucketExist(bucketName)) {
+            if (!bucketExists(bucketName)) {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
                 return;
             }
@@ -84,7 +84,7 @@ public class MinioClientUtil {
      */
     public String uploadFile(String bucketName, MultipartFile file, String fileName) throws Exception {
         try {
-            if (!bucketExist(bucketName)) {
+            if (!bucketExists(bucketName)) {
                 createBucket(bucketName);
             }
             InputStream inputStream = file.getInputStream();
@@ -147,7 +147,7 @@ public class MinioClientUtil {
      * @param bucketName 桶名
      * @param fileName 文件名
      * @param toPath 文件的访问URL
-     * @return
+     * @return  成功
      */
     public boolean downloadFile(String bucketName, String fileName, String toPath) throws Exception {
         try {

@@ -1,6 +1,6 @@
 package com.zea.cloud.user.bean.condition;
 
-import com.zea.cloud.user.bean.po.PageCondition;
+import com.zea.cloud.common.bean.common.PageCondition;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

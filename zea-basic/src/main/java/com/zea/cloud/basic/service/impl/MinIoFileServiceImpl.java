@@ -1,11 +1,11 @@
 package com.zea.cloud.basic.service.impl;
 
-import com.zea.cloud.basic.util.Result;
 import com.zea.cloud.basic.bean.entity.FileInfo;
 import com.zea.cloud.basic.mapper.MinIoFileMapper;
 import com.zea.cloud.basic.service.MinIoFileService;
-import com.zea.cloud.basic.service.feign.FeignUserService;
 import com.zea.cloud.basic.util.MinioClientUtil;
+import com.zea.cloud.common.exception.ErrorCode;
+import com.zea.cloud.common.exception.MyException;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.StatObjectArgs;
@@ -34,15 +34,11 @@ public class MinIoFileServiceImpl implements MinIoFileService {
     private MinioClient minioClient;
     @Resource
     private MinioClientUtil minioClientUtil;
-
     @Resource
     private MinIoFileMapper minIoFileMapper;
 
-    @Resource
-    private FeignUserService feignUserService;
-
     @Transactional(rollbackFor = Exception.class)
-    public Result uploadFileAndSaveInfoIntoDb(MultipartFile file) {
+    public Integer uploadFileAndSaveInfoIntoDb(MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
             long size = file.getSize();
@@ -58,10 +54,10 @@ public class MinIoFileServiceImpl implements MinIoFileService {
                     .uploadUserId(1)
                     .build();
             minIoFileMapper.insert(fileInfo);
-            return Result.okWithDataNoPage(fileInfo);
+            return fileInfo.getId();
         } catch (Exception e) {
             log.error("----调用上传文件接口发生异常 {} ", e.getMessage(), e);
-            return Result.errorWithOutData(e.toString());
+            throw new MyException(ErrorCode.BUSINESS_EXCEPTION, e.getMessage());
         }
     }
 
@@ -71,39 +67,37 @@ public class MinIoFileServiceImpl implements MinIoFileService {
      * @param id 文件id
      * @return minIoUrl
      */
-    public Result viewFileById(Integer id) {
+    public String viewFileById(Integer id) {
         FileInfo fileInfo = minIoFileMapper.selectById(id);
         if (Objects.isNull(fileInfo)) {
-            return Result.errorWithOutData("当前Id未查询到对应的文件");
+            throw new MyException(ErrorCode.BUSINESS_EXCEPTION, "当前Id未查询到对应的文件");
         }
         String minIoUrl = fileInfo.getMinioUrl();
         if (!StringUtils.hasLength(minIoUrl)) {
-            return Result.errorWithOutData("当前Id查询到文件获取到的url为空");
+            throw new MyException(ErrorCode.BUSINESS_EXCEPTION, "当前Id查询到文件获取到的url为空");
         }
-        return Result.okWithDataNoPage(minIoUrl);
+        return minIoUrl;
     }
     /**
      * 删除文件
      *
      * @param id 文件id
-     * @return 删除成功或失败
      */
     @Transactional(rollbackFor = Exception.class)
-    public Result removeFileById(Integer id) {
+    public void deleteFileById(Integer id) {
         try {
             FileInfo fileInfo = minIoFileMapper.selectById(id);
             if (Objects.isNull(fileInfo)) {
-                return Result.errorWithOutData("当前Id未查询到对应的文件");
+                throw new MyException(ErrorCode.BUSINESS_EXCEPTION, "当前Id未查询到对应的文件");
             }
             String bucketName = fileInfo.getBucketName();
             String name = fileInfo.getFileName();
 
             minioClientUtil.deleteFile(bucketName, name);
             minIoFileMapper.deleteById(id);
-            return Result.okWithOutData();
         } catch (Exception e) {
             log.error("---删除文件{} 发生异常{} ", id, e.getMessage(), e);
-            return Result.errorWithOutData(e.getMessage());
+            throw new MyException(ErrorCode.BUSINESS_EXCEPTION, e.getMessage());
         }
     }
     /**
@@ -127,7 +121,7 @@ public class MinIoFileServiceImpl implements MinIoFileService {
                     .bucket(bucketName)
                     .object(name).build());
             byte[] buf = new byte[1024];
-            int length = 0;
+            int length;
             response.reset();
             // Content-disposition 是 MIME 协议的扩展，MIME 协议指示 MIME 用户代理如何显示附加的文件。
             // Content-disposition其实可以控制用户请求所得的内容存为一个文件的时候提供一个默认的文件名，

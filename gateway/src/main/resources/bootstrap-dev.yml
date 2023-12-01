@@ -90,3 +90,8 @@ spring:
 
       default-filters: # 默认过滤项
         - AddResponseHeader=project, zea-cloud
+
+auth:
+  enable: false
+  # 认证中心地址
+  # server: http://localhost:9721/auth/oauth/token

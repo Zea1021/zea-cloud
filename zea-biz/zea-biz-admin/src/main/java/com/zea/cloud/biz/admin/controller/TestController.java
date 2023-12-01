@@ -1,6 +1,6 @@
 package com.zea.cloud.biz.admin.controller;
 
-import com.zea.cloud.biz.admin.entity.User;
+import com.zea.cloud.common.bean.entity.User;
 import com.zea.cloud.biz.admin.feign.FeignUserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

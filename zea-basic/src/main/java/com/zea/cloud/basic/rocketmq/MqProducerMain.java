@@ -1,7 +1,7 @@
 package com.zea.cloud.basic.rocketmq;
 
-import com.zea.cloud.basic.constant.MQTag;
-import com.zea.cloud.basic.constant.MQTopic;
+import com.zea.cloud.common.mq.MQTag;
+import com.zea.cloud.common.mq.MQTopic;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;

@@ -1,11 +1,13 @@
 package com.zea.cloud.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zea.cloud.common.annotation.ForbidRepeatClick;
+import com.zea.cloud.common.bean.common.Result;
+import com.zea.cloud.common.utils.ResultUtil;
 import com.zea.cloud.user.bean.condition.UserCondition;
-import com.zea.cloud.user.bean.entiry.User;
+import com.zea.cloud.common.bean.entity.User;
 import com.zea.cloud.user.service.UserService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("user")
-public class UserController implements InitializingBean {
+public class UserController {
 
     /**
      * 用户服务
@@ -29,9 +31,11 @@ public class UserController implements InitializingBean {
      * @param user 用户信息
      * @return user_id
      */
+    @ForbidRepeatClick()
     @PostMapping("addUser")
-    public Integer addUser(@RequestBody User user) {
-        return userService.addUser(user);
+    public Result<Integer> addUser(@RequestBody User user) {
+        Integer result = userService.addUser(user);
+        return ResultUtil.success(result);
     }
 
     /**
@@ -39,8 +43,8 @@ public class UserController implements InitializingBean {
      * @return 用户信息列表
      */
     @GetMapping("selectAllUser")
-    public List<User> selectAllUser() {
-        return userService.selectAllUser();
+    public Result<List<User>> selectAllUser() {
+        return ResultUtil.success(userService.selectAllUser());
     }
 
     /**
@@ -49,8 +53,8 @@ public class UserController implements InitializingBean {
      * @return 用户信息列表
      */
     @PostMapping("selectUserList")
-    public IPage<User> selectUserList(@RequestBody UserCondition condition) {
-        return userService.selectUserList(condition);
+    public Result<IPage<User>> selectUserList(@RequestBody UserCondition condition) {
+        return ResultUtil.success(userService.selectUserList(condition));
     }
 
     /**
@@ -59,8 +63,8 @@ public class UserController implements InitializingBean {
      * @return 用户信息
      */
     @GetMapping("selectUserInfoById")
-    public User selectUserInfoById(@RequestParam Integer id){
-        return userService.selectUserInfoById(id);
+    public Result<User> selectUserInfoById(@RequestParam Integer id){
+        return ResultUtil.success(userService.selectUserInfoById(id));
     }
 
     @GetMapping("test")
@@ -68,8 +72,4 @@ public class UserController implements InitializingBean {
         userService.test();
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        System.out.println("================UserController Init Success!=================");
-    }
 }

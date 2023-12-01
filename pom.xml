@@ -7,6 +7,7 @@
         <module>zea-biz</module>
         <module>gateway</module>
         <module>zea-user</module>
+        <module>zea-common</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -37,30 +38,29 @@
         <springboot-validation.version>3.0.9</springboot-validation.version>
     </properties>
     <dependencies>
+        <!--web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!--日志-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
-        <!--web-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
         <!--2021.0.5版本起，Spring Cloud将不再默认启用bootstrap包，需手动导入-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!--日志-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <!--lombook-->
         <dependency>
@@ -83,7 +83,7 @@
     <profiles>
         <profile>
             <id>dev</id>
-            <!--激活条件 其中默认为该profile 更多激活条件可以参考1.2.8 -->
+            <!--激活条件 其中默认为该profile-->
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -106,7 +106,8 @@
     当需要变更版本号的时候只需要在父类容器里更新，不需要任何一个子项目的修改；
     如果某个子项目需要另外一个特殊的版本号时，只需要在自己的模块dependencies中声明一个版本号即可。
     子类就会使用子类声明的版本号，不继承于父类版本号。 -->
-    <!-- 注意：dependencyManagement只是声明依赖，并不自动实现引入。而所有声明在dependencies里的依赖都会自动引入，并默认被所有的子项目继承 -->
+    <!-- 注意：dependencyManagement只是声明依赖，并不自动实现引入。
+    而所有声明在dependencies里的依赖都会自动引入，并默认被所有的子项目继承 -->
     <dependencyManagement>
         <dependencies>
             <!--spring  cloud alibaba 的版本管理-->

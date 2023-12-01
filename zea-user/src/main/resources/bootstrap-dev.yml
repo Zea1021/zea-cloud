@@ -19,15 +19,12 @@ spring:
       password: nacos
       # 配置中心（如果没有使用可以不配）
       config:
-        # 命名空间
-        # namespace: dev
+        # 命名空间 namespace: dev
         namespace: ${spring.profiles.active}
         # 这个就表示 在我们 nacos 命名空间id为 dev中 有一个data-id 为 user-service-service-dev.yml 的配置文件 读取这个里面的配置
         file-extension: yml
         config-retry-time: 300000
-        # 共享配置, 可以把公共配置放在同个命名空间下，然后创建一个 common.yml 文件 ，里面可以放共用的配置
-        # shared-configs: common.yml
-        group: dev
+        group: zea
       # 发布到注册中心（如果没有使用可以不配）
       discovery:
         # 命名空间

@@ -2,7 +2,7 @@ package com.zea.cloud.user.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zea.cloud.user.bean.condition.UserCondition;
-import com.zea.cloud.user.bean.entiry.User;
+import com.zea.cloud.common.bean.entity.User;
 
 import java.util.List;
 

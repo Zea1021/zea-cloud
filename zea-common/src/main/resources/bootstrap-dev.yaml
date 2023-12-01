@@ -1,0 +1,9 @@
+auth:
+  enable: false
+accessStaticsEnable:
+  enable: true
+nofilter:
+  url: /fddp-api/user/loginBynmosp,/fddp-api/user/refreshToken,/fddp-api/user/logintemp,/fddp-api/user/token/gettoken
+lock4j:
+  acquire-timeout: 3000
+  expire: 30000

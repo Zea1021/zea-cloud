@@ -12,9 +12,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @description: 文件信息
- * @author: jfzou
- * @date: 2023/9/22
+ * 文件信息
+ * @author jfzou
+ * @since 2023/9/22
  */
 @Data
 @NoArgsConstructor

@@ -39,7 +39,7 @@ minio:
   secretKey: 12345678 #访问的秘钥
 
 rocketmq:
-  # rocketmq服务器地址（多个以英文逗号隔开），其中rocketmq dashboard 的配置为 127.0.0.1:10214
+  # rocketmq nameserver服务器地址（多个以英文逗号隔开），其中rocketmq dashboard 的配置为 127.0.0.1:10214
   name-server: 127.0.0.1:10213
   # 生产者配置
   producer:

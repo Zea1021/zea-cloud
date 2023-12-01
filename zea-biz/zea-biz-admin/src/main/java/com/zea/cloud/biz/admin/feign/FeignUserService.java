@@ -1,6 +1,6 @@
 package com.zea.cloud.biz.admin.feign;
 
-import com.zea.cloud.biz.admin.entity.User;
+import com.zea.cloud.common.bean.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;

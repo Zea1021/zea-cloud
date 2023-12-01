@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <!-- common -->
+        <dependency>
+            <groupId>com.zea.cloud</groupId>
+            <artifactId>zea-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!-- nacos 注册中心-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -44,12 +50,6 @@
             <artifactId>xxl-job-core</artifactId>
             <version>${xxl-job.version}</version>
         </dependency>
-        <!--lombok-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok-client.version}</version>
-        </dependency>
         <!-- mysql连接 -->
         <dependency>
             <groupId>mysql</groupId>
@@ -62,21 +62,10 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>${druid.client.version}</version>
         </dependency>
-        <!-- 使用Druid产生的日志功能log4j -->
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.client.version}</version>
-        </dependency>
-        <!-- mybatis-plus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
+        <finalName>zea-biz-admin</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -1,7 +1,9 @@
 package com.zea.cloud.basic.controller;
 
-import com.zea.cloud.basic.util.Result;
 import com.zea.cloud.basic.service.MinIoFileService;
+import com.zea.cloud.common.bean.common.Result;
+import com.zea.cloud.common.exception.ErrorCode;
+import com.zea.cloud.common.utils.ResultUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +19,16 @@ public class MinIoFileController {
     private MinIoFileService minIoFileService;
 
     @PostMapping(value = "/upload")
-    public Result uploadFile(@RequestBody MultipartFile file) {
+    public Result<Integer> uploadFile(@RequestBody MultipartFile file) {
         if(null == file){
-            return Result.errorWithOutData("上传文件不能为空");
+            return ResultUtil.fail(ErrorCode.BUSINESS_EXCEPTION, "上传文件不能为空!");
         }
-        return minIoFileService.uploadFileAndSaveInfoIntoDb(file);
+        return ResultUtil.success(minIoFileService.uploadFileAndSaveInfoIntoDb(file));
     }
 
     @GetMapping(value = "/view")
-    public Result viewFile(@RequestParam(value = "id") Integer id) {
-        return minIoFileService.viewFileById(id);
+    public Result<String> viewFile(@RequestParam(value = "id") Integer id) {
+        return ResultUtil.success(minIoFileService.viewFileById(id));
     }
 
     @GetMapping(value = "/downLoad")
@@ -35,7 +37,8 @@ public class MinIoFileController {
     }
 
     @GetMapping("/delete")
-    public Result removeFileById(@RequestParam(value = "id") Integer id) {
-        return minIoFileService.removeFileById(id);
+    public Result<?> deleteFileById(@RequestParam(value = "id") Integer id) {
+        minIoFileService.deleteFileById(id);
+        return ResultUtil.success();
     }
 }
