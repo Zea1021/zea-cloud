@@ -11,17 +11,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-//    @Autowired
+//    @Resource
 //    private RequestHeaderInterceptor requestHeaderInterceptor;
 //
-//    @Autowired
+//    @Resource
 //    private AuthRequestInterceptor authRequestInterceptor;
 
     @Resource
     private ForbidRepeatClickInterceptor forbidRepeatClickInterceptor;
 
-//    @Value("${nofilter.url}")
-//    private String noFilters;
+    @Value("${nofilter.url}")
+    private String noFilters;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -31,26 +31,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //        registry.addInterceptor(authRequestInterceptor).
 //                addPathPatterns("/**").excludePathPatterns(Arrays.asList(noFilters.split(",")));
 
+        // 禁止重复点击的功能已经通过切面类实现，这里将拦截器注释掉防止同时起作用，导致每次都是重复点击
 //        registry.addInterceptor(forbidRepeatClickInterceptor).addPathPatterns("/**");
     }
 
-//    @Bean(name = "multipartResolver")
-//    public MultipartResolver multipartResolver() {
-//        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-//        resolver.setDefaultEncoding("UTF-8");
-//        resolver.setResolveLazily(true);//resolveLazily属性启用是为了推迟文件解析，以在在UploadAction中捕获文件大小异常
-//        resolver.setMaxInMemorySize(40960);
-//        resolver.setMaxUploadSize(200*1024*1024);//上传文件大小 50M 50*1024*1024
-//        return resolver;
-//    }
-
-    //    @Bean(name = "multipartResolver")
-//    public MultipartResolver multipartResolver(){
-//        CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-//        resolver.setDefaultEncoding("UTF-8");
-//        resolver.setResolveLazily(true);//resolveLazily属性启用是为了推迟文件解析，以在在UploadAction中捕获文件大小异常
-//        resolver.setMaxInMemorySize(40960);
-//        resolver.setMaxUploadSize(50*1024*1024);//上传文件大小 50M 50*1024*1024
-//        return resolver;
-//    }
 }

@@ -1,9 +1,15 @@
 auth:
   enable: false
+
 accessStaticsEnable:
   enable: true
-nofilter:
-  url: /fddp-api/user/loginBynmosp,/fddp-api/user/refreshToken,/fddp-api/user/logintemp,/fddp-api/user/token/gettoken
+
+no-filter:
+  url:
+
+# 分布式锁配置
 lock4j:
+  # 获取锁超时时间
   acquire-timeout: 3000
+  # 锁默认过期时间
   expire: 30000

@@ -31,7 +31,7 @@ public class UserController {
      * @param user 用户信息
      * @return user_id
      */
-    @ForbidRepeatClick()
+    @ForbidRepeatClick
     @PostMapping("addUser")
     public Result<Integer> addUser(@RequestBody User user) {
         Integer result = userService.addUser(user);

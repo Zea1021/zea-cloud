@@ -24,6 +24,8 @@ public enum ErrorCode {
     UN_AUTH("401","Need to login"),
 
     NOT_PERMISSION("403","Has no permission"),
+
+    FORBID_REPEAT_CLICK("-7","Forbid repeat click"),
     ;
 
     private final String code;

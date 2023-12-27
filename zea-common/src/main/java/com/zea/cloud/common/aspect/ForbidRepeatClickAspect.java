@@ -56,9 +56,9 @@ public class ForbidRepeatClickAspect {
             String message = forbidRepeatClick.message();
             String token = request.getHeader("Authorization");
             User user = JwtUtil.getUserInfo(token);
-//            if (user.getId() == null) {
-//                throw new MyException(ErrorCode.UN_AUTH);
-//            }
+            if (user == null) {
+                throw new MyException(ErrorCode.UN_AUTH);
+            }
             String redisKey = "ForbidRepeatClick:"
                     + request.getRequestURI().trim()
                     + ":"
@@ -70,7 +70,7 @@ public class ForbidRepeatClickAspect {
             if (previousTime != null) {
                 if (currentTime - previousTime < timeUnit.toMillis(time)) {
                     // 重复点击
-                    throw new MyException(ErrorCode.BUSINESS_EXCEPTION, message);
+                    throw new MyException(ErrorCode.FORBID_REPEAT_CLICK, message);
                 }
             }
             redisUtil.setKeyValue(redisKey, currentTime, time, timeUnit);
