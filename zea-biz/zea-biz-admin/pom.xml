@@ -5,7 +5,7 @@
     <parent>
         <artifactId>zea-biz</artifactId>
         <groupId>com.zea.cloud</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.zea.cloud</groupId>
             <artifactId>zea-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <!-- nacos 注册中心-->
         <dependency>
@@ -71,12 +71,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--如果未指定，main将使用找到的第一个包含方法的编译类。
+                    <!--如果未指定，main将使用找到的第一个包含main方法的编译类。
                     也就是说如果只有一个main方法，那不需要去指定;
                     如果你这个模块存在两个主类，那么就需要在插件中指定具体哪个启动类了-->
                     <mainClass>com.zea.cloud.biz.admin.AdminBizApplication</mainClass>
                     <!--maven打包的jar包输出的位置-->
-                    <outputDirectory>../output</outputDirectory>
+                    <outputDirectory>../../output</outputDirectory>
                 </configuration>
                 <!--默认情况下,repackage命令所生成的包,会把项目中所有的依赖都打进去。
                 但其实在项目中scope为provided的依赖，比如 lombok、mybatis-plus等,只作用于编译阶段，编译完成就没用了。-->
@@ -87,20 +87,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <!--maven-resources-plugin插件负责处理项目资源文件并拷贝到输出目录-->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <!--通过<configuration>指定编码为UTF-8-->
-                    <encoding>UTF-8</encoding>
-                    <!--指定哪些后缀的文件不进行统一编码，这里指定的是excel文件 -->
-                    <nonFilteredFileExtensions>
-                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
-                    </nonFilteredFileExtensions>
-                </configuration>
             </plugin>
         </plugins>
     </build>

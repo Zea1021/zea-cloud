@@ -5,7 +5,7 @@
     <parent>
         <artifactId>zea-cloud</artifactId>
         <groupId>com.zea.cloud</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,9 +24,32 @@
         <dependency>
             <groupId>com.zea.cloud</groupId>
             <artifactId>zea-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
-        <!-- mysql连接 -->
+        <!--web-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!--排除tomcat改为jetty-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--Jetty-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+        <!--Jetty不支持Java标准 servlet API包（例如jakarta.servlet）中的类，所以添加依赖-->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>11.0.18</version>
+        </dependency>
+        <!-- mysql连接java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -62,27 +85,32 @@
     </dependencies>
 
     <build>
-        <finalName>zea-user</finalName>
-        <!--打包规则，打包时将resource文件夹打包进去-->
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
+        <plugins>
+            <!--注意：
+            spring-boot-maven-plugin 默认的打包方式不会把依赖的jar包也进行打包，因此是不可执行的。
+            需要配置 repackage，这样就会将依赖的jar包也进行打包，创建一个自动可执行的jar或war文件
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.1.3</version>
+                <configuration>
+                    <!--如果未指定，main将使用找到的第一个包含main方法的编译类。
+                    也就是说如果只有一个main方法，那不需要去指定;
+                    如果你这个模块存在两个主类，那么就需要在插件中指定具体哪个启动类了-->
+                    <mainClass>com.zea.cloud.user.UserApplication</mainClass>
+                    <!--maven打包的jar包输出的位置-->
+                    <outputDirectory>../output</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

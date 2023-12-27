@@ -5,11 +5,11 @@
     <parent>
         <artifactId>zea-cloud</artifactId>
         <groupId>com.zea.cloud</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gateway</artifactId>
+    <artifactId>zea-gateway</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -43,4 +43,31 @@
             <version>2022.0.0.0-RC1</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!--注意：
+            spring-boot-maven-plugin 默认的打包方式不会把依赖的jar包也进行打包，因此是不可执行的。
+            需要配置 repackage，这样就会将依赖的jar包也进行打包，创建一个自动可执行的jar或war文件
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--启动类所在位置-->
+                    <mainClass>com.zea.cloud.gateway.GatewayApplication</mainClass>
+                    <!--maven打包的jar包输出的位置-->
+                    <outputDirectory>../output</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

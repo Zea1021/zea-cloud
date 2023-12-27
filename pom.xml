@@ -5,24 +5,33 @@
     <modules>
         <module>zea-basic</module>
         <module>zea-biz</module>
-        <module>gateway</module>
+        <module>zea-gateway</module>
         <module>zea-user</module>
         <module>zea-common</module>
     </modules>
-    <parent>
+    <!--spring-boot-starter-parent中定义了大量的pluginManagement插件管理 和 一个 spring-boot-dependencies 依赖版本管理。
+    但该插件管理只有在 POM 中配置了真正的 plugin 元素，且其 groupId 和 artifactId 与 pluginManagement 元素中配置的插件匹配时，
+    spring-boot-starter-parent中的 pluginManagement 元素的配置才会影响到实际的插件的配置及其行为。
+    同样的，只有在 POM 中配置了真正的 dependency 元素，且其 groupId 和 artifactId 与 spring-boot-dependencies 元素中配置的依赖匹配时，
+    spring-boot-starter-parent中的 spring-boot-dependencies 元素的配置才会影响到实际的依赖的配置及其行为-->
+    <!--<parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.9</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;
+    </parent>-->
     <groupId>com.zea.cloud</groupId>
     <artifactId>zea-cloud</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
+    <!-- Maven 在设计时，借鉴了 Java 面向对象中的继承思想，提出了 POM 继承思想。
+    当一个项目包含多个模块时，可以在该项目中再创建一个父模块，并在其 POM 中声明依赖，其他模块的 POM 可通过继承父模块的 POM 来获得对相关依赖的声明。
+    对于父模块而言，其目的是为了消除子模块 POM 中的重复配置，其中不包含有任何实际代码，因此父模块 POM 的打包类型（packaging）必须是 pom。-->
     <packaging>pom</packaging>
     <name>zea-cloud</name>
     <description>zea-cloud</description>
-    <!-- properties主要用来定义常量，通过${value}来使用。-->
+    <!-- properties主要用来定义常量，子项目可以通过${value}来使用。-->
     <properties>
+        <project.version>1.0.0</project.version>
         <java.version>17</java.version>
         <spring.cloud.alibaba.version>2022.0.0.0-RC1</spring.cloud.alibaba.version>
         <spring.cloud.version>2022.0.0</spring.cloud.version>
@@ -35,34 +44,28 @@
         <minio-client.version>8.4.5</minio-client.version>
         <lombok-client.version>1.18.28</lombok-client.version>
         <rocketmq-client.version>2.2.3</rocketmq-client.version>
-        <springboot-validation.version>3.0.9</springboot-validation.version>
+        <springboot-validation.version>3.2.0</springboot-validation.version>
+        <fastjson.version>2.0.32</fastjson.version>
     </properties>
+    <!--所有声明在dependencies里的依赖都会自动引入，并默认被所有的子项目继承-->
     <dependencies>
-        <!--web-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!--2021.0.5版本起，Spring Cloud将不再默认启用bootstrap包，需手动导入-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
+        <!--参数校验-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${springboot-validation.version}</version>
         </dependency>
         <!--日志-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
-        <!--lombook-->
+        <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -71,7 +74,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>2.0.32</version>
+            <version>${fastjson.version}</version>
         </dependency>
         <!--tool-->
         <dependency>
@@ -101,13 +104,11 @@
         </profile>
     </profiles>
 
-    <!-- 使用dependencyManagement可以统一管理项目的版本号，
-    确保应用的各个项目的依赖和版本一致，不用每个模块项目都弄一个版本号，不利于管理，
-    当需要变更版本号的时候只需要在父类容器里更新，不需要任何一个子项目的修改；
-    如果某个子项目需要另外一个特殊的版本号时，只需要在自己的模块dependencies中声明一个版本号即可。
-    子类就会使用子类声明的版本号，不继承于父类版本号。 -->
-    <!-- 注意：dependencyManagement只是声明依赖，并不自动实现引入。
-    而所有声明在dependencies里的依赖都会自动引入，并默认被所有的子项目继承 -->
+    <!--
+    使用dependencyManagement可以统一管理子项目的版本号。
+    注意：dependencyManagement只是声明依赖，并没有真的把依赖引入到项目中。
+    当子类自己引入没有指定版本号的依赖时，如果dependencyManagement中存在该依赖，那么子类引入的依赖的版本号为dependencyManagement中的版本号。
+    -->
     <dependencyManagement>
         <dependencies>
             <!--spring  cloud alibaba 的版本管理-->
@@ -126,23 +127,30 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--spring  boot  的版本管理-->
+            <!--maven和Java一样都是单继承机制。现在有个问题，我现在想使用spring-boot-starter-parent提供的依赖管理，
+            但是我又不想继承他，因为我这个项目后续还要继承别的项目，所以在上面把 spring-boot-starter-parent 给注释了-->
+            <!--但我又想使用 spring-boot-starter-parent 中的 spring-boot-dependencies 的依赖版本管理。
+            maven当中有<type>pom</type>和<scope>import</scope> ，通过这两个标签在dependencyManagement中声明依赖，
+            可以替代继承（达到类似parent标签的作用，解决了单继承问题）。-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
+                <!--<artifactId>spring-boot-parent</artifactId>-->
                 <version>${spring.boot.version}</version>
+                <!--申明类型为POM，而不是Jar-->
                 <type>pom</type>
+                <!--注：import 依赖范围只能与 dependencyManagement 元素配合使用才会有效，其功能是将目标 pom.xml
+                中的 dependencyManagement 配置导入合并到当前 pom.xml 的 dependencyManagement 中。
+                如果改为<artifactId>spring-boot-parent</artifactId>虽然也可以继承 spring-boot-dependencies的dependencyManagement 配置，
+                但 spring-boot-parent 中的插件配置 pluginManagement 是无法继承的，因为import依赖范围只能作用于dependencyManagement配置。-->
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
+        <!--父模块有的插件，子模块即便没有显示引入此插件，依旧会继承父模块配置的插件-->
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <plugin>
                 <!-- 用于声明编译的相关配置，若不声明，则maven采用默认的相关配置 -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -158,12 +166,43 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <!--maven-resources-plugin插件负责处理项目资源文件并拷贝到输出目录-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <!--通过<configuration>指定编码为UTF-8-->
+                    <encoding>UTF-8</encoding>
+                    <!--禁止对某些资源文件进行过滤（即占位符替代），如图片文件进行过滤将导致文件被破坏-->
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>html</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
         </plugins>
         <!-- resources标签用来标识项目在编译运行时需要额外编译的文件。例如手工引入jar包、不同运行环境对应不同的profile。-->
-<!--        <resources>-->
-<!--            <resource>-->
-
-<!--            </resource>-->
-<!--        </resources>-->
+        <resources>
+            <!--手动指定需要额外编译到target文件中的文件位置-->
+            <resource>
+                <directory>${project.basedir}/bin</directory>
+                <targetPath>/bin</targetPath>
+                <filtering>true</filtering>
+            </resource>
+            <!--由于上述手动指定了额外的文件夹，会覆盖原有默认的配置。
+            所以这里需要重新指定classpath资源文件的位置-->
+            <resource>
+                <directory>${project.basedir}/src/main/java</directory>
+                <!--对资源进行过滤，Maven将在构建过程中替换资源文件中的占位符（例如${property.name}）为实际值-->
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
