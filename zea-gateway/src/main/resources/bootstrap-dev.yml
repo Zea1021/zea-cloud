@@ -62,12 +62,12 @@ spring:
             - AddRequestHeader=zea, awesome!
             # 给所有进入 userservice 的响应添加一个请求头：zea=awesome!
             - AddResponseHeader=zea, awesome!
-          # filters:
-            # - AddRequestHeader=name,zs          #请求头添加name:zs
-            # - AddRequestParameter=color,blue    #请求参数添加color:blue
-            # - AddResponseHeader=phone,973345344 #响应头添加phone:973345344
+            # - AddRequestHeader=name, zs          #请求头添加name:zs
+            # - AddRequestParameter=color, blue    #请求参数添加color:blue
+            # - AddResponseHeader=phone, 973345344 #响应头添加phone:973345344
             # - PrefixPath=/mypath                #添加路径前缀/mypath
             # - StripPrefix=n                     #删除路径前缀n个
+
       globalcors: # 全局的跨域处理
         add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
         corsConfigurations:
@@ -92,6 +92,9 @@ spring:
         - AddResponseHeader=project, zea-cloud
 
 auth:
-  enable: false
+  enable: true
   # 认证中心地址
   # server: http://localhost:9721/auth/oauth/token
+
+no-filter:
+  url: /zea-cloud/zea-user/auth/loginByForm, /zea-cloud/zea-user/auth/refreshToken

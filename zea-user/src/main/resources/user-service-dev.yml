@@ -1,4 +1,7 @@
 spring:
+  messages:
+    basename: i18n.messages, i18n.common-messages
+    encoding: UTF-8
   datasource:
     # 默认给我们配置的数据源为 : class com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://127.0.0.1:3306/zea-user?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&autoReconnect=true&allowMultiQueries=true
@@ -67,4 +70,9 @@ seata:
       namespace: dev
       group: zea
 
+verify:
+  code:
+    enable: false
 
+client:
+  id: zea-cloud-user

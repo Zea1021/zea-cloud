@@ -26,6 +26,8 @@ public enum ErrorCode {
     NOT_PERMISSION("403","Has no permission"),
 
     FORBID_REPEAT_CLICK("-7","Forbid repeat click"),
+
+    LOCK_ERROR("-7","Can not obtain the lock"),
     ;
 
     private final String code;

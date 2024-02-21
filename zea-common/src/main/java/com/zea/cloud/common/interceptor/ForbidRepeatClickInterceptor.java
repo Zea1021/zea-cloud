@@ -1,16 +1,16 @@
 package com.zea.cloud.common.interceptor;
 
-import com.zea.cloud.common.annotation.ForbidRepeatClick;
-import com.zea.cloud.common.bean.entity.User;
+import com.zea.cloud.common.repeat.ForbidRepeatClick;
 import com.zea.cloud.common.exception.ErrorCode;
 import com.zea.cloud.common.exception.MyException;
-import com.zea.cloud.common.utils.JwtUtil;
 import com.zea.cloud.common.utils.RedisUtil;
+import com.zea.cloud.tool.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -33,7 +33,7 @@ public class ForbidRepeatClickInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
-        // @ForbidRepeatClick注解作用在方法上，所以拦截器仅需要拦截方法
+        /*// @ForbidRepeatClick注解作用在方法上，所以拦截器仅需要拦截方法
         if (handler instanceof HandlerMethod handlerMethod) {
             ForbidRepeatClick forbidRepeatClick = handlerMethod.getMethodAnnotation(ForbidRepeatClick.class);
             if (forbidRepeatClick != null) {
@@ -41,8 +41,11 @@ public class ForbidRepeatClickInterceptor implements HandlerInterceptor {
                 TimeUnit timeUnit = forbidRepeatClick.timeUnit();
                 String message = forbidRepeatClick.message();
                 String token = request.getHeader("Authorization");
-                User user = JwtUtil.getUserInfo(token);
-                if (user == null) {
+                if (!StringUtils.hasLength(token)) {
+                    throw new MyException(ErrorCode.UN_AUTH);
+                }
+                String userId = JwtUtil.getUserId(token);
+                if (!StringUtils.hasLength(userId)) {
                     throw new MyException(ErrorCode.UN_AUTH);
                 }
                 String redisKey = "ForbidRepeatClick:"
@@ -50,8 +53,8 @@ public class ForbidRepeatClickInterceptor implements HandlerInterceptor {
                         + ":"
                         + request.getMethod()
                         + ":userId:"
-                        +  user.getId();
-                Long previousTime = redisUtil.getKeyValue(redisKey);
+                        +  userId;
+                Long previousTime = (Long) redisUtil.getKeyValue(redisKey);
                 Long currentTime = new Date().getTime();
                 if (previousTime != null) {
                     if (currentTime - previousTime < timeUnit.toMillis(time)) {
@@ -61,7 +64,7 @@ public class ForbidRepeatClickInterceptor implements HandlerInterceptor {
                 }
                 redisUtil.setKeyValue(redisKey, currentTime, time, timeUnit);
             }
-        }
+        }*/
         return true;
     }
 

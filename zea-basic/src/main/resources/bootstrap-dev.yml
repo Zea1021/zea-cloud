@@ -1,5 +1,5 @@
 server:
-  port: 9700
+  port: 9710
   servlet:
     # api路径
     context-path: /zea-cloud/zea-basic/
@@ -21,7 +21,7 @@ spring:
       config:
         # 命名空间id(此处不用public,因public初始化的空间, id为空)
         # namespace: dev
-        namespace: ${spring.profiles.active}
+        namespace: dev
         # 这个就表示 在我们nacos命名空间id为 dev中 有一个data-id 为 demo-service.yml 的配置文件 读取这个里面的配置
         file-extension: yaml
         config-retry-time: 300000
@@ -30,6 +30,6 @@ spring:
       # 发布到注册中心 （如果没有使用可以不配）
       discovery:
         # 命名空间id(此处不用public,因public初始化的空间, id为空)
-        namespace: ${spring.profiles.active}
+        namespace: dev
         # 分组
         group: zea

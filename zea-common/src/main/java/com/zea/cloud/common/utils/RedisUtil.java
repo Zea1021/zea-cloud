@@ -15,14 +15,14 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtil {
 
     @Resource(name = "MyRedisTemplate")
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 设置键值对
      * @param key 键
      * @param value 值
      */
-    public <T> void setKeyValue(final String key, final T value) {
+    public void setKeyValue(final String key, final Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
@@ -33,7 +33,7 @@ public class RedisUtil {
      * @param timeout 时间大小
      * @param unit 时间单位
      */
-    public <T> void setKeyValue(final String key, final T value, final long timeout, final TimeUnit unit) {
+    public void setKeyValue(final String key, final Object value, final long timeout, final TimeUnit unit) {
         redisTemplate.opsForValue().set(key, value, timeout, unit);
     }
 
@@ -42,8 +42,8 @@ public class RedisUtil {
      * @param key 键
      * @return 值
      */
-    public <T> T getKeyValue(final String key) {
-        ValueOperations<String, T> valueOperations = redisTemplate.opsForValue();
+    public Object getKeyValue(final String key) {
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
     }
 
@@ -52,7 +52,7 @@ public class RedisUtil {
      * @param key 键
      * @param map map对象
      */
-    public <T, K> void setHashValue(final String key, final Map<T, K> map) {
+    public void setHashValue(final String key, final Map<String, Object> map) {
         redisTemplate.opsForHash().putAll(key, map);
     }
 
@@ -62,7 +62,7 @@ public class RedisUtil {
      * @param hashKey entry 的 key
      * @param value   entry 的 value
      */
-    public <T, K> void setHashValue(final String key, final T hashKey, final K value) {
+    public void setHashValue(final String key, final Object hashKey, final Object value) {
         redisTemplate.opsForHash().put(key, hashKey, value);
     }
 
@@ -71,7 +71,7 @@ public class RedisUtil {
      * @param key 键
      * @return hash map
      */
-    public <T, K> Map<T, K> getHashValue(final String key) {
+    public Map<Object, Object> getHashValue(final String key) {
         return redisTemplate.opsForHash().entries(key);
     }
 
@@ -80,8 +80,8 @@ public class RedisUtil {
      * @param key 键
      * @return hash map
      */
-    public <T, K> K getHashValue(final String key, final T hashKey) {
-        HashOperations<String, T, K> hashOperations = redisTemplate.opsForHash();
+    public Object getHashValue(final String key, final Object hashKey) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         return hashOperations.get(key, hashKey);
     }
 
@@ -90,9 +90,8 @@ public class RedisUtil {
      * @param key 键
      * @param valueList list
      * @return 插入成功的数量
-     * @param <T> 数据类型
      */
-    public <T> Long setListValue(final String key, final List<T> valueList) {
+    public Long setListValue(final String key, final List<Object> valueList) {
         Long count = redisTemplate.opsForList().rightPushAll(key, valueList);
         return count == null ? 0 : count;
     }
@@ -102,9 +101,8 @@ public class RedisUtil {
      * @param key 键
      * @param value value
      * @return 插入成功的数量
-     * @param <T> 数据类型
      */
-    public <T> Long setListValue(final String key, final T value) {
+    public Long setListValue(final String key, final Object value) {
         Long count = redisTemplate.opsForList().rightPush(key, value);
         return count == null ? 0 : count;
     }
@@ -113,9 +111,8 @@ public class RedisUtil {
      * 获取list
      * @param key 键
      * @return list
-     * @param <T> 数据类型
      */
-    public <T> List<T> getListValue(final String key) {
+    public List<Object> getListValue(final String key) {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
@@ -123,9 +120,8 @@ public class RedisUtil {
      * 设置set value
      * @param key 键
      * @param value z值
-     * @param <T> 数据类型
      */
-    public <T> Long setSetValue(final String key, final List<T> value) {
+    public Long setSetValue(final String key, final List<Object> value) {
         Long count = redisTemplate.opsForSet().add(key, value.toArray());
         return count == null ? 0 : count;
     }
@@ -134,9 +130,8 @@ public class RedisUtil {
      * 设置set value
      * @param key 键
      * @param value z值
-     * @param <T> 数据类型
      */
-    public <T> Long setSetValue(final String key, final Set<T> value) {
+    public Long setSetValue(final String key, final Set<Object> value) {
         Long count = redisTemplate.opsForSet().add(key, value.toArray());
         return count == null ? 0 : count;
     }
@@ -145,9 +140,8 @@ public class RedisUtil {
      * 设置set value
      * @param key 键
      * @param value z值
-     * @param <T> 数据类型
      */
-    public <T> Long setSetValue(final String key, final T value) {
+    public Long setSetValue(final String key, final Object value) {
         Long count = redisTemplate.opsForSet().add(key, value);
         return count == null ? 0 : count;
     }
@@ -156,9 +150,8 @@ public class RedisUtil {
      * 获取set
      * @param key 键
      * @return set
-     * @param <T> 数据类型
      */
-    public <T> Set<T> getSetValue(final String key) {
+    public Set<Object> getSetValue(final String key) {
         return redisTemplate.opsForSet().members(key);
     }
 
@@ -167,9 +160,8 @@ public class RedisUtil {
      * @param key 键
      * @param obj 判断对象
      * @return Boolean
-     * @param <T> 数据类型
      */
-    public <T> Boolean isMember(final String key, final T obj) {
+    public Boolean isMember(final String key, final Object obj) {
         return redisTemplate.opsForSet().isMember(key, obj);
     }
 

@@ -1,7 +1,7 @@
 package com.zea.cloud.user.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.zea.cloud.common.annotation.ForbidRepeatClick;
+import com.zea.cloud.common.repeat.ForbidRepeatClick;
 import com.zea.cloud.common.bean.common.Result;
 import com.zea.cloud.common.utils.ResultUtil;
 import com.zea.cloud.user.bean.condition.UserCondition;
@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * 用户控制层
  * @author jfzou
+ * @since 2024/1/4
  */
 @RestController
 @RequestMapping("user")
@@ -42,7 +43,7 @@ public class UserController {
      * 查询所有用户信息
      * @return 用户信息列表
      */
-    @GetMapping("selectAllUser")
+    @GetMapping("admin/selectAllUser")
     public Result<List<User>> selectAllUser() {
         return ResultUtil.success(userService.selectAllUser());
     }
@@ -65,11 +66,6 @@ public class UserController {
     @GetMapping("selectUserInfoById")
     public Result<User> selectUserInfoById(@RequestParam Integer id){
         return ResultUtil.success(userService.selectUserInfoById(id));
-    }
-
-    @GetMapping("test")
-    public void test() {
-        userService.test();
     }
 
 }

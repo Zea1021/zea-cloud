@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>登录</h2>
+        <form id="login-form">
+            <label for="username"></label><input id="username" type="text" placeholder="用户名" name="username" required>
+            <label for="password"></label><input id="password" type="password" placeholder="密码" name="password" required>
+            <label for="code"></label><input id="code" type="text" placeholder="验证码" name="code" required>
+            <button type="submit">登录</button>
+        </form>
+    </div>
+	<script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单的默认提交行为
+
+            // 获取用户名和密码
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const code = document.getElementById('code').value;
+            // todo 生成随机码和图片验证码
+            const randomStr = "random_str";
+
+            // 构建请求参数
+            const data = {
+                userName: username,
+                password: password,
+                code: code,
+                randomStr: randomStr
+            };
+
+            // 发送 POST 请求到 www.zea.com
+            fetch('http://localhost:19700/zea-cloud/zea-user/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 登录成功，跳转到其他页面
+                    alert('登录成功');
+                    // window.location.href = 'https://www.zea.com/dashboard';
+                } else {
+                    // 登录失败，提示用户
+                    // 这里可以根据data.message进行不同的提示
+                    alert(data.message);
+                    // alert('登录失败，请检查用户名或密码是否正确');
+                }
+            })
+            .catch(error => {
+                console.error('请求失败:', error);
+                alert('请求失败，请稍后重试');
+            });
+        });
+    </script>
+</body>
+</html>

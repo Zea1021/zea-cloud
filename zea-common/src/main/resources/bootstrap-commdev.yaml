@@ -1,0 +1,15 @@
+# 是否开启登录认证
+auth:
+  enable: true
+# 静态资源访问控制
+accessStaticsEnable:
+  enable: true
+# 无需过滤的 url
+no-filter:
+  url: /zea-cloud/zea-user/auth/loginByForm, /zea-cloud/zea-user/auth/refreshToken
+# 分布式锁配置
+lock4j:
+  # 获取锁超时时间
+  acquire-timeout: 3000
+  # 锁默认过期时间
+  expire: 30000
