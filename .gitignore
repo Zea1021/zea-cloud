@@ -7,3 +7,4 @@ thirdparts/minio/data/**
 thirdparts/nacos-2.2.1/data/**
 thirdparts/seata-1.6.1/bin/sessionStore/**
 
+/data/rocketmq-dashboard/rocketmq-console/data
